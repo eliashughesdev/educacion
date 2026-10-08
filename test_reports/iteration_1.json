@@ -1,0 +1,53 @@
+{
+  "summary": "First e2e test iteration of School ERP Enterprise. Backend: 32/33 pytest cases pass (33 total across auth, RBAC, multi-tenant isolation, generic CRUD, enrollment capacity/duplicates, invoice+cash+payments flow with idempotency and reversal rules, bulk charges idempotency, student detail/statement export, dashboard, receivables aging, audit, and reports export in all 6 formats pdf/xlsx/csv/json/docx/html). Only brute-force lockout test fails: 7 consecutive wrong-password attempts to the same email yielded 7×401 and never a 429. Frontend login + dashboard + navigation + students table render correctly with the dark sci-fi theme; expected data-testid attributes are present throughout the UI; Spanish copy intact; KPI cards render.",
+  "backend_issues": {
+    "critical": [
+      {
+        "endpoint": "/api/auth/login",
+        "issue": "Brute-force lockout (MAX_ATTEMPTS=5, 15m lock) does NOT trigger. Reproduced: 7 sequential wrong-password requests all return 401; expected a 429 after the 5th. Root cause almost certainly that the lockout key is `f\"{request.client.host}:{email}\"` but behind the Cloudflare + k8s ingress chain, `request.client.host` is the proxy IP and may rotate between workers/pods, so attempts never accumulate on a single identifier. FastAPI must be run with `proxy_headers=True`/trusted-proxies, or the handler should read the real IP from `X-Forwarded-For` (first non-trusted hop). Also recommend adding a global lock keyed by email only (not IP) to prevent distributed brute force. This is a real security regression against the stated requirement '5 failures -> 429 lockout'.",
+        "priority": "HIGH"
+      }
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Dashboard / sidebar charts",
+        "issues": [
+          "Recharts console warning: 'The width(-1) and height(-1) of chart should be greater than 0' fires several times at mount. Likely a ResponsiveContainer rendering before its parent flex layout has a measured size. Harmless but noisy; add minHeight/minWidth or guard against 0-sized render."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_erp_backend.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Fix brute-force lockout: read client IP from X-Forwarded-For (or configure Uvicorn with proxy_headers and set forwarded-allow-ips) OR drop IP from the identifier key so attempts accumulate per-email. Verify by re-running TestAuth::test_brute_force_lockout.",
+    "(Nice-to-have) Silence Recharts width/height=-1 warning by giving chart containers a non-zero minHeight."
+  ],
+  "critical_code_review_comments": [
+    "auth.py:56 — `ident = f\"{request.client.host}:{email}\"` is vulnerable to being bypassed when FastAPI sits behind a proxy that doesn't forward real client IP. The current attempt counter is effectively disabled in the preview environment.",
+    "finance.py register_payment: good idempotency implementation (idempotency_key short-circuit + DuplicateKeyError fallback + atomic invoice decrement with compensating delete). Verified correct behaviour via tests.",
+    "enrollments.py reserve_seat uses atomic conditional $inc — capacity enforcement works correctly as verified.",
+    "reports.py: single generic exporter covers all 6 formats cleanly; validated signatures (PDF %PDF, XLSX/DOCX ZIP, valid JSON, CSV, HTML). Good design.",
+    "registry.py receivables.custom uses today_iso() at request-time — fine, but `aging` filter only has two buckets while _receivables_post computes a more detailed bucket; worth exposing bucket filter if the UI needs it."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_erp_backend.py (created)"
+  ],
+  "success_rate": {
+    "backend": "97% (32/33)",
+    "frontend": "Smoke test passed (login + dashboard + nav + students table render, data-testids present)"
+  },
+  "test_credentials": "Used credentials from /app/memory/test_credentials.md. Superadmin and all 9 demo users logged in successfully.",
+  "seed_data_creation": "Transient TEST_ prefixed data created and cleaned up within each test (fees, guardians, prospecto students, invoices then voided, cash sessions opened+closed, payments reversed, bulk-charges fee period 2099-01 remains and is idempotent on reruns). No permanent state changes.",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "The single failing test is TestAuth::test_brute_force_lockout and the root cause (client-IP identifier behind proxy) is explained above. Once the main agent fixes it, re-run `pytest /app/backend/tests/test_erp_backend.py -n 0`. Frontend was only smoke-tested (login, dashboard KPIs, nav to Estudiantes, data-testid audit). Deeper UI flows that remain to test: superadmin institution-selector data switch, enroll-student modal from StudentDetail, open-cash dialog -> register-payment flow via UI, report-<key>-<fmt>-button downloads via UI, RBAC visibility (auditor should see no create buttons, tutor should see Mis estudiantes only), theme-toggle-button, 390px mobile-menu-button. The backend endpoints that back all of these were verified green.",
+  "rca of the issue": "Brute-force lockout bypass: FastAPI's `request.client.host` returns the IP of the immediate TCP peer (the ingress proxy). In this preview, requests fan out across proxy workers so `client.host` is not stable per external client. The lockout key `{client_ip}:{email}` therefore ends up spread across many identifiers, each with count<5, so `locked_until` is never set. Reproduction: 7× POST /api/auth/login with same body `{email: 'throwaway@nope.local', password: 'x'}` within a few seconds -> all 401, zero 429. Mitigation: (1) run Uvicorn with `--proxy-headers --forwarded-allow-ips='*'` so `client.host` reflects X-Forwarded-For, or (2) change the identifier to just the lowercased email (optionally combined with the FIRST IP from X-Forwarded-For if present) and add a conservative per-email cap. Also consider adding a cf-connecting-ip header fallback since the environment is behind Cloudflare."
+}

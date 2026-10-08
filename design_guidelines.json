@@ -1,0 +1,130 @@
+{
+  "project_name": "School ERP Enterprise - Sci-Fi JARVIS Command Center",
+  "archetype": "Sci-Fi Tactical Control Center / Aerospace Mission Critical",
+  "theme_default": "dark",
+  "theme_toggle_supported": true,
+  "language": "es",
+  "credentials_info": {
+    "admin_user": "admin@jarvisschool.edu",
+    "admin_password": "AdminERP2026!",
+    "seed_location": "src/data/seedData.json",
+    "deployment_guide_note": "Credenciales por defecto para ambiente On-Premise: Usuario: admin@jarvisschool.edu / Clave: AdminERP2026!"
+  },
+  "typography": {
+    "heading_font": "Outfit, sans-serif",
+    "body_font": "Manrope, sans-serif",
+    "mono_font": "JetBrains Mono, monospace",
+    "hierarchy": {
+      "h1": "text-3xl md:text-5xl font-extrabold tracking-tight",
+      "h2": "text-2xl md:text-3xl font-bold tracking-tight",
+      "h3": "text-xl md:text-2xl font-semibold",
+      "h4": "text-lg font-semibold",
+      "body": "text-sm md:text-base font-normal leading-relaxed",
+      "caption_mono": "text-xs font-mono uppercase tracking-widest text-cyan-400/80"
+    },
+    "forbidden_fonts": ["Space Grotesk", "Inter (for headers)"]
+  },
+  "colors": {
+    "mode": "Dark Sci-Fi by Default with Light Mode Switch",
+    "background_dark": "#070A12",
+    "surface_dark": "rgba(15, 23, 42, 0.75)",
+    "surface_card_dark": "rgba(17, 24, 39, 0.8)",
+    "border_dark": "rgba(56, 189, 248, 0.15)",
+    "functional_palette": {
+      "electric_blue_academic": {
+        "hex": "#3B82F6",
+        "tailwind": "blue-500",
+        "use": "Académico, Cursos, Calificaciones"
+      },
+      "emerald_success": {
+        "hex": "#10B981",
+        "tailwind": "emerald-500",
+        "use": "Caja Abierta, Pagos Exitosos, Alumnos Activos"
+      },
+      "violet_admin": {
+        "hex": "#8B5CF6",
+        "tailwind": "violet-500",
+        "use": "Administración, Roles, Configuración de Sede"
+      },
+      "cyan_data": {
+        "hex": "#06B6D4",
+        "tailwind": "cyan-400",
+        "use": "Comandos JARVIS, HUD Widgets, Telemetría"
+      },
+      "amber_warning": {
+        "hex": "#F59E0B",
+        "tailwind": "amber-500",
+        "use": "Alertas de Mora Cercana, Aforo 80%+"
+      },
+      "red_risk": {
+        "hex": "#EF4444",
+        "tailwind": "red-500",
+        "use": "Morosidad Crítica, Caja Cerrada Descuadre, Auditoría Crítica"
+      },
+      "turquoise_communications": {
+        "hex": "#14B8A6",
+        "tailwind": "teal-400",
+        "use": "Notificaciones a Apoderados, Comunicados"
+      },
+      "magenta_analysis": {
+        "hex": "#D946EF",
+        "tailwind": "fuchsia-500",
+        "use": "Proyecciones Financieras, Analytics Avanzado"
+      }
+    }
+  },
+  "export_formats": ["PDF", "XLSX", "CSV", "JSON", "DOCX", "PRINT"],
+  "visual_enhancers": {
+    "glassmorphic_cards": "backdrop-blur-xl bg-slate-900/60 border border-cyan-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.5)] dark:bg-slate-950/70 dark:border-cyan-500/20",
+    "glowing_borders": "relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-cyan-500/20 before:via-blue-500/10 before:to-transparent before:opacity-50",
+    "radar_grid_effect": "bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]",
+    "hud_badge": "px-2 py-0.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border"
+  },
+  "key_components": [
+    "JARVIS Command Palette (Global Search Ctrl+K)",
+    "Top Navigation with Campus/Year Selector, Dark/Light Toggle & Notifications",
+    "Collapsible Sci-Fi Sidebar with Glowing Active Indicators",
+    "Command Center Dashboard (Active KPI grid, Recharts charts, Telemetry Feed)",
+    "Institutions & Campuses Manager",
+    "Academic Years & Periods (Matrícula setup)",
+    "Grades, Sections & Capacity Radar",
+    "Student & Guardian CRUD with Modal and Data Tables",
+    "Enrollment Workflow & Status Tracker",
+    "Fee Catalog & Invoicing Engine",
+    "Cash Register Control (Apertura/Cierre de Caja) with Payment Receipts",
+    "Accounts Receivable Aging (Morosidad y Cartera)",
+    "Unified Multi-format Export Center (PDF, Excel, CSV, JSON, Word, Print)",
+    "Audit Log & Cyber Telemetry",
+    "Role-based User Access Admin"
+  ],
+  "image_urls": {
+    "campus_main": "https://images.unsplash.com/photo-1775503059048-214026cce5cf?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHw0fHxtb2Rlcm4lMjB1bml2ZXJzaXR5JTIwY2FtcHVzJTIwYnVpbGRpbmd8ZW58MHx8fHwxNzkxNDc2OTM2fDA&ixlib=rb-4.1.0&q=85",
+    "campus_building": "https://images.unsplash.com/photo-1670284768187-5cc68eada1b3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjB1bml2ZXJzaXR5JTIwY2FtcHVzJTIwYnVpbGRpbmd8ZW58MHx8fHwxNzkxNDc2OTM2fDA&ixlib=rb-4.1.0&q=85",
+    "campus_interior": "https://images.unsplash.com/photo-1784308992921-045da5443625?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjB1bml2ZXJzaXR5JTIwY2FtcHVzJTIwYnVpbGRpbmd8ZW58MHx8fHwxNzkxNDc2OTM2fDA&ixlib=rb-4.1.0&q=85"
+  },
+  "testing_requirements": {
+    "data_testid_policy": "All buttons, inputs, modals, tabs, export options, table headers, rows, and key KPI values MUST have a unique data-testid attribute in kebab-case.",
+    "examples": [
+      "data-testid=\"login-email-input\"",
+      "data-testid=\"login-password-input\"",
+      "data-testid=\"login-submit-button\"",
+      "data-testid=\"export-pdf-button\"",
+      "data-testid=\"export-excel-button\"",
+      "data-testid=\"export-csv-button\"",
+      "data-testid=\"export-json-button\"",
+      "data-testid=\"export-docx-button\"",
+      "data-testid=\"export-print-button\"",
+      "data-testid=\"command-palette-trigger\"",
+      "data-testid=\"theme-toggle-button\"",
+      "data-testid=\"open-cash-register-button\"",
+      "data-testid=\"close-cash-register-button\""
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Ensure the UI uses Spanish text throughout.",
+    "Default to dark mode with smooth transition when toggled to light mode.",
+    "Support all 6 export actions (PDF, XLSX, CSV, JSON, DOCX, Print) with downloadable mock/real binary generation or file trigger.",
+    "Use mock local state with initial seed data containing complete students, guardians, invoices, cash sessions, and audit logs.",
+    "Ensure login page clearly pre-fills or presents the Admin credentials: admin@jarvisschool.edu / AdminERP2026!."
+  ]
+}
